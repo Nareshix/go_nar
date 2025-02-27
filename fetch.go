@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "fmt"
 	"io"
 	"log"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func Fetch(app string) any {
+func Fetch(app string) string {
 	url := "https://raw.githubusercontent.com/Nareshix/repos/refs/heads/main/apps.json"
 
 
@@ -30,10 +31,8 @@ func Fetch(app string) any {
 
 	downloadLink := gjson.GetBytes(body, downloadKey.String())
 
-
-
 	if downloadLink.Exists(){
-		return &downloadLink
+		return downloadLink.Str
 	}else{
 		return "no link"	
 	}

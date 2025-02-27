@@ -16,14 +16,14 @@ func main() {
 				Aliases: []string{"i"},
 				Usage:   "install app",
 				Action: func(cCtx *cli.Context) error {
-					// fmt.Println("added task: ", cCtx.Args().First())
 					if cCtx.Args().Len() == 0 {
 						fmt.Println("nar install <app>")
 						return nil
 					}else{
 						downloadLink :=  Fetch(cCtx.Args().First())
-						fmt.Println(downloadLink)
+						Download(downloadLink)
 					}
+
 
 					return nil
 				},
