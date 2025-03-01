@@ -1,51 +1,89 @@
 package main
 
 import (
+	// "encoding/json"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
+	"net/url"
 	"os"
+	"os/exec"
+	"path"
 	"strings"
-
-	"github.com/schollz/progressbar/v3"
+	// "fmt"
 )
 
-func Download(downloadLink string) {
-	req, err := http.NewRequest("GET", downloadLink , nil)
-	if err != nil {
-		fmt.Println("Error creating request:", err)
+func Download(downloadLink string, binPath string, symlink string, autoDownload bool) {
+	
+	// If autodownload script is avail use that only
+	if autoDownload{
+	fmt.Println(downloadLink)
+	cmd := exec.Command(os.Getenv("SHELL"), "-c", downloadLink)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin // Required if `wget` asks for input
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Unable to run autodownload script")
+		return
+	}
+		return 
+	}
+
+	// gets the download link from http
+	cmd := exec.Command("sudo", "wget","-q", "--show-progress", downloadLink)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin // Required if `wget` asks for input
+	if err := cmd.Run(); err != nil {
+		fmt.Println("Unable to download http link")
 		return
 	}
 
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		fmt.Println("Error downloading file:", err)
+	parsedDownloadLink,err := url.Parse(downloadLink)
+	if err != nil{
+		fmt.Println("Unable to parse download link")
 		return
 	}
-	defer resp.Body.Close()
+	fileNameWithExtension := path.Base(parsedDownloadLink.Path)
 
-	// Check if ContentLength is available
-	if resp.ContentLength == -1 {
-		fmt.Println("Warning: ContentLength is not available, progress bar may not show.")
-	}
+	// Donwload DEB file
+	if strings.HasSuffix(fileNameWithExtension, ".deb"){
 
-	lastSlashIndex := strings.LastIndex(downloadLink, "/")
-	fileName := downloadLink[lastSlashIndex+1:]
+		debFileName := "./" + fileNameWithExtension
+		cmd := exec.Command("sudo", "apt", "install", debFileName )
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin // Required if `wget` asks for input
+		if err := cmd.Run(); err != nil{
+			fmt.Println("Unable to install DEB file")
+			return
+		}
 
-	f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
+		if err := os.Remove(fileNameWithExtension); err != nil{
+			fmt.Println("Unable to remove DEB file")
+			return
+		}
+		
+	// download tar binaries in /opt/ and create a symlink to /usr/local/bin
+	} else if strings.HasSuffix(fileNameWithExtension, ".tar.gz"){
+		
+		cmd1 := exec.Command("sudo", "tar", "-xvzf", fileNameWithExtension,"-C", "/opt")
+		if err := cmd1.Run(); err != nil{
+			fmt.Println("failed to untar file")
+		}
+		
+		if err := os.Remove(fileNameWithExtension); err != nil{
+			fmt.Println("Unable to remove DEB file")
+			return
+		}
+		
+		fullPathToBin := "/opt/" + binPath
+		cmd2 := exec.Command("sudo", "ln", "-s", fullPathToBin, symlink )
+		if err := cmd2.Run(); err != nil{
+			fmt.Println("failed to create symlink")
+			return
 
-	bar := progressbar.DefaultBytes(
-		resp.ContentLength,
-		"downloading",
-	)
+		
+	} 
 
-	_, err = io.Copy(io.MultiWriter(f, bar), resp.Body)
-	if err != nil {
-		fmt.Println("Error copying data:", err)
+
 	}
 }

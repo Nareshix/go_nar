@@ -20,11 +20,9 @@ func main() {
 						fmt.Println("nar install <app>")
 						return nil
 					}else{
-						downloadLink :=  Fetch(cCtx.Args().First())
-						Download(downloadLink)
+						downloadLink, binPath, symlink,autoDownload :=  Fetch(cCtx.Args().First())
+						Download(downloadLink, binPath, symlink, autoDownload)
 					}
-
-
 					return nil
 				},
 			},
