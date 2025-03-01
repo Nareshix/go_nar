@@ -24,7 +24,7 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 		fmt.Println("Unable to run autodownload script")
 		return
 	}
-		return 
+		return //exit program 
 	}
 
 	// gets the download link from http
