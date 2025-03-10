@@ -21,17 +21,23 @@ func main() {
 						return nil
 					}else{
 						downloadLink, binPath, symlink,autoDownload :=  Fetch(cCtx.Args().First())
-						Download(downloadLink, binPath, symlink, autoDownload)
+						Download(downloadLink, binPath, symlink,autoDownload)
 					}
 					return nil
 				},
 			},
 			{
-				Name:    "complete",
-				Aliases: []string{"c"},
-				Usage:   "complete a task on the list",
+				Name:    "uninstall",
+				Aliases: []string{"u", "remove", "r", "purge", "p"},
+				Usage:   "uninstall app",
 				Action: func(cCtx *cli.Context) error {
-					fmt.Println("completed task: ", cCtx.Args().First())
+					if cCtx.Args().Len() == 0 {
+						fmt.Println("nar uninstall <app>")
+						return nil
+					}else{
+						deleteLink :=  FetchDel(cCtx.Args().First())
+						DeleteApp(deleteLink)
+					}
 					return nil
 				},
 			},
