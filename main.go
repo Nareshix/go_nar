@@ -20,8 +20,8 @@ func main() {
 						fmt.Println("nar install <app>")
 						return nil
 					}else{
-						downloadLink, binPath, symlink,deleteCmd,autoDownload :=  Fetch(cCtx.Args().First())
-						Download(downloadLink, binPath, symlink,deleteCmd,autoDownload)
+						downloadLink, binPath, symlink,autoDownload :=  Fetch(cCtx.Args().First())
+						Download(downloadLink, binPath, symlink,autoDownload)
 					}
 					return nil
 				},
@@ -31,8 +31,8 @@ func main() {
 				Aliases: []string{"u", "remove", "r", "purge", "p"},
 				Usage:   "uninstall app",
 				Action: func(cCtx *cli.Context) error {
-					fmt.Println("completed task: ", cCtx.Args().First())
-					return nil
+					// deleteLink :=  Fetch(cCtx.Args().First())
+
 				},
 			},
 			{
