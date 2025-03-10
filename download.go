@@ -15,7 +15,6 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 
 	// If autodownload script is avail use that only
 	if autoDownload {
-		fmt.Println(downloadLink)
 		cmd := exec.Command(os.Getenv("SHELL"), "-c", downloadLink)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
