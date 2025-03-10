@@ -7,8 +7,8 @@ download.go installs deb, tar, and download link so far (more testing needed)
 fetch.go works from fetching data from repos.db
 
 
-so far download done
-update, delete is needed
+so far download, delete done
+update is needed
 
 
 //todo
