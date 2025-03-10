@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+// checks for download script --> deb --> tar.gz
+
 func Download(downloadLink string, binPath string, symlink string,deleteCmd string,autoDownload bool) {
 	
 	// If autodownload script is avail use that only
