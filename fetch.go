@@ -26,7 +26,7 @@ func Fetch(app string) (string, string, string, bool) {
 
 		err = rows.Scan(&download_link, &bin_path, &symlink, &auto_download)
 		if err != nil {
-			log.Fatalf("Unable to fetch some app info %v\n", err)
+			log.Fatalf("Unable to fetch download app info %v\n", err)
 		}
 	}
 	return download_link, bin_path, symlink, auto_download
