@@ -17,7 +17,7 @@ func Fetch(app string) (string, string, string, string, bool) {
 
 	rows, err := db.Query("SELECT download_link, bin_path, symlink, delete_link, auto_download FROM packages WHERE name = ?", app)
 	if err != nil {
-		log.Fatal("Unable to query %v\n", err)
+		log.Fatalf("Unable to query %v\n", err)
 	}
 	var download_link, bin_path, symlink, delete_link string
 	var auto_download bool
