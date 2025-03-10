@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func Download(downloadLink string, binPath string, symlink string, autoDownload bool,deleteCmd string) {
+func Download(downloadLink string, binPath string, symlink string,deleteCmd string,autoDownload bool) {
 	
 	// If autodownload script is avail use that only
 	if autoDownload{
