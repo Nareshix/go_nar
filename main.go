@@ -31,8 +31,9 @@ func main() {
 				Aliases: []string{"u", "remove", "r", "purge", "p"},
 				Usage:   "uninstall app",
 				Action: func(cCtx *cli.Context) error {
-					// deleteLink :=  Fetch(cCtx.Args().First())
-
+					deleteLink :=  FetchDel(cCtx.Args().First())
+					fmt.Println(deleteLink)
+					return nil
 				},
 			},
 			{
