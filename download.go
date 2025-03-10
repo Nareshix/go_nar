@@ -1,37 +1,37 @@
 package main
 
 import (
-	// "encoding/json"
 	"fmt"
 	"net/url"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
-	// "fmt"
 )
 
-func Download(downloadLink string, binPath string, symlink string, autoDownload bool) {
+func Download(downloadLink string, binPath string, symlink string, autoDownload bool,deleteCmd string) {
 	
 	// If autodownload script is avail use that only
 	if autoDownload{
-	fmt.Println(downloadLink)
-	cmd := exec.Command(os.Getenv("SHELL"), "-c", downloadLink)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin // Required if `wget` asks for input
-	if err := cmd.Run(); err != nil {
-		fmt.Println("Unable to run autodownload script")
-		return
-	}
-		return //exit program 
+		fmt.Println(downloadLink)
+		cmd := exec.Command(os.Getenv("SHELL"), "-c", downloadLink)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin // Required if `wget` asks for input
+		
+		if err := cmd.Run(); err != nil {
+			fmt.Println("Unable to run autodownload script")
+			return
+		}
+			return //exit program 
 	}
 
-	// gets the download link from http
+	// grabs the tar.gz or .deb file from github via http
 	cmd := exec.Command("sudo", "wget","-q", "--show-progress", downloadLink)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin // Required if `wget` asks for input
+	
 	if err := cmd.Run(); err != nil {
 		fmt.Println("Unable to download http link")
 		return
@@ -52,11 +52,13 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin // Required if `wget` asks for input
+		
 		if err := cmd.Run(); err != nil{
 			fmt.Println("Unable to install DEB file")
 			return
 		}
-
+		
+		// deleted the .deb file (not needed)
 		if err := os.Remove(fileNameWithExtension); err != nil{
 			fmt.Println("Unable to remove DEB file")
 			return
@@ -70,8 +72,9 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 			fmt.Println("failed to untar file")
 		}
 		
+		// remove the tar.gz file (not needed)
 		if err := os.Remove(fileNameWithExtension); err != nil{
-			fmt.Println("Unable to remove DEB file")
+			fmt.Println("Unable to remove tar.gz. file")
 			return
 		}
 		
