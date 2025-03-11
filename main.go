@@ -10,6 +10,7 @@ import (
 
 func main() {
 	app := &cli.App{
+		EnableBashCompletion: true,
 		Commands: []*cli.Command{
 			{
 				Name:    "install",
@@ -19,32 +20,53 @@ func main() {
 					if cCtx.Args().Len() == 0 {
 						fmt.Println("nar install <app>")
 						return nil
-					}else{
-						downloadLink, binPath, symlink,autoDownload :=  Fetch(cCtx.Args().First())
-						Download(downloadLink, binPath, symlink,autoDownload)
+					} else {
+						appName := cCtx.Args().First()
+						downloadLink, binPath, symlink, appVersion, autoDownload := Fetch(appName)
+						Download(downloadLink, binPath, symlink, autoDownload, appName, appVersion)
 					}
 					return nil
 				},
 			},
 			{
 				Name:    "uninstall",
-				Aliases: []string{"u", "remove", "r", "purge", "p"},
+				Aliases: []string{"ui", "remove", "r", "purge", "p"},
 				Usage:   "uninstall app",
 				Action: func(cCtx *cli.Context) error {
 					if cCtx.Args().Len() == 0 {
 						fmt.Println("nar uninstall <app>")
 						return nil
-					}else{
-						deleteLink :=  FetchDel(cCtx.Args().First())
-						DeleteApp(deleteLink)
+					} else {
+						appName := cCtx.Args().First()
+						deleteLink := FetchDel(appName)
+						DeleteApp(deleteLink, appName)
 					}
 					return nil
 				},
 			},
 			{
-				Name:    "template",
-				Aliases: []string{"t"},
-				Usage:   "options for task templates",
+				Name:    "update",
+				Aliases: []string{"up", "upgrade"},
+				Usage:   "uninstall app",
+				Action: func(cCtx *cli.Context) error {
+					appName := cCtx.Args().First()
+					UpdateDB(appName, FetchCurrentVersionNo(appName))
+					return nil
+				},
+			},
+			{
+				Name:    "list",
+				Aliases: []string{"l", "show", "s"},
+				Usage:   "list out all apps",
+				Action: func(cCtx *cli.Context) error {
+					List()
+					return nil
+				},
+			},
+			{
+				Name:    "oof",
+				Aliases: []string{"nil"},
+				Usage:   "Updates app",
 				Subcommands: []*cli.Command{
 					{
 						Name:  "add",

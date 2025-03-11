@@ -13,3 +13,4 @@ update is needed
 
 //todo
 proper err handling if no apps is given, currenlty for uninstall nth is displayed
+handles case when alr instlaled

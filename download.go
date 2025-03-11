@@ -1,18 +1,21 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
+
+	_ "modernc.org/sqlite" // Import the driver
 )
 
 // checks for download script --> deb --> tar.gz
 
-func Download(downloadLink string, binPath string, symlink string, autoDownload bool) {
-
+func Download(downloadLink string, binPath string, symlink string, autoDownload bool, appName string, appVersion string) {
 	// If autodownload script is avail use that only
 	if autoDownload {
 		cmd := exec.Command(os.Getenv("SHELL"), "-c", downloadLink)
@@ -24,7 +27,8 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 			fmt.Println("Unable to run autodownload script")
 			return
 		}
-		return //exit program
+		StoreValueInTrackingDB(appName, appVersion)
+		return
 	}
 
 	// grabs the tar.gz or .deb file from github via http
@@ -64,6 +68,8 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 			fmt.Println("Unable to remove DEB file")
 			return
 		}
+		StoreValueInTrackingDB(appName, appVersion)
+		return
 
 		// download tar binaries in /opt/ and create a symlink to /usr/local/bin
 	} else if strings.HasSuffix(fileNameWithExtension, ".tar.gz") {
@@ -87,6 +93,27 @@ func Download(downloadLink string, binPath string, symlink string, autoDownload 
 			return
 
 		}
-
+		StoreValueInTrackingDB(appName, appVersion)
+		return
 	}
+}
+
+//TODO handles case when alr downloaded
+func StoreValueInTrackingDB(appName string, version string){
+	db, err := sql.Open("sqlite", "data.db")
+    if err != nil {
+        log.Fatal("Unable to open data db")
+    }
+    defer db.Close()
+
+    
+    _, err = db.Exec("CREATE TABLE IF NOT EXISTS downloaded (name TEXT PRIMARY KEY, version TEXT )")
+    if err != nil {
+        log.Fatal("Downloaded table does not exist and unable to create one")
+    }
+
+    _, err = db.Exec("INSERT INTO downloaded (name, version) VALUES (?, ?)", appName, version)
+    if err != nil {
+        log.Fatal("Unable to update downloaded tables in db")
+    }
 }
