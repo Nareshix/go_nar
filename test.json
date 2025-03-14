@@ -1,0 +1,37 @@
+{
+    "vscodium": {
+        "owner": "vscodium",
+        "repo": "vscodium",
+        "scriptExists": false,
+        "version": "1.97.2.25045",
+        "downloadLink": "https://github.com/VSCodium/vscodium/releases/download/1.97.2.25045/codium_1.97.2.25045_amd64.deb",
+        "deleteCmd": "sudo apt purge codium"
+    },
+    "neovim": {
+            "owner": "neovim",
+            "repo": "neovim",
+            "scriptExists": false,
+            "version": "v0.10.4",
+            "downloadLink": "https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-x86_64.tar.gz",
+            "deleteCmd": "sudo rm -rf /opt/nvim-linux-x86_64/ /usr/local/bin/nvim",
+            "binPath": "nvim-linux-x86_64/bin/nvim",
+            "symlink": "nvim"
+        },
+        "fzf": {
+            "owner": "junegunn",
+            "repo": "fzf",
+            "scriptExists": false,
+            "version": "v0.60.2",
+            "download": "https://github.com/junegunn/fzf/releases/download/v0.60.2/fzf-0.60.2-linux_amd64.tar.gz",
+            "deleteCmd": "sudo rm -rf /opt/fzf /usr/local/bin/fzf",
+            "binPath": "fzf",
+            "symlink": "fzf"
+        },
+        "kitty": {
+            "owner": "kovidgoyal",
+            "repo": "kitty",
+            "version": "v0.39.1",
+            "scriptExists": true,
+            "download": "curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin && ln -sf ~/.local/kitty.app/bin/kitty ~/.local/kitty.app/bin/kitten ~/.local/bin/ && cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/ && cp ~/.local/kitty.app/share/applications/kitty-open.desktop ~/.local/share/applications/ && sed -i \"s|Icon=kitty|Icon=$(readlink -f ~)/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g\" ~/.local/share/applications/kitty*.desktop && sed -i \"s|Exec=kitty|Exec=$(readlink -f ~)/.local/kitty.app/bin/kitty|g\" ~/.local/share/applications/kitty*.desktop && echo 'kitty.desktop' > ~/.config/xdg-terminals.list"
+        }
+    }
