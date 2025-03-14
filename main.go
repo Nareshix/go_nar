@@ -56,7 +56,7 @@ func main() {
 			},
 			{
 				Name:    "list",
-				Aliases: []string{"l", "show", "s"},
+				Aliases: []string{"ls", "show"},
 				Usage:   "list out all apps",
 				Action: func(cCtx *cli.Context) error {
 					List()
